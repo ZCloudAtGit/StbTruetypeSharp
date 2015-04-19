@@ -1,0 +1,26 @@
+LIBRARY
+EXPORTS
+;Simple 3D API (don't ship this, but it's fine for tools and quick start)
+	stbtt_BakeFontBitmap
+	stbtt_GetBakedQuad
+
+;Improved 3D API (more shippable):
+	stbtt_PackBegin
+	stbtt_PackSetOversampling
+	stbtt_PackFontRanges
+	stbtt_PackEnd
+	stbtt_GetPackedQuad
+
+;"Load" a font file from a memory buffer (you have to keep the buffer loaded)
+	stbtt_InitFont
+	stbtt_GetFontOffsetForIndex
+
+;Render a unicode codepoint to a bitmap
+	stbtt_GetCodepointBitmap
+	stbtt_MakeCodepointBitmap
+	stbtt_GetCodepointBitmapBox
+
+;Character advance/positioning
+	stbtt_GetCodepointHMetrics
+	stbtt_GetFontVMetrics
+	stbtt_GetCodepointKernAdvance
