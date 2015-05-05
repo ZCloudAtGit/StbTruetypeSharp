@@ -35,6 +35,15 @@ namespace stb_Test
             }
         }
 
+        private void OpenFile(string path)
+        {
+            Process process = new Process();
+            process.StartInfo.FileName = "notepad.exe";
+            process.StartInfo.Arguments = path;
+            process.Start();
+            process.WaitForExit(1000);
+        }
+
         /// <summary>
         /// Load a ttf file and print bitmap of codepoint 'A' in the ttf file as text. 
         /// </summary>
@@ -55,7 +64,7 @@ namespace stb_Test
             #endregion
 
             //Read ttf file into byte array
-            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\resources\liberation_mono\LiberationMono-Regular.ttf");
+            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\Windsong.ttf");
             using (var ttf = new PinnedArray<byte>(ttfFileContent))
             {
                 //get pointer of the ttf file content
@@ -74,7 +83,9 @@ namespace stb_Test
                 int width = 0, height = 0;
                 var bitmap = STBTrueType.GetCodepointBitmap(font, 0f, scaleY, 'A' & 0xFF, ref width, ref height, null, null);
                 //output the bitmap to a text file
-                WriteBitmapToFileAsText("1.txt", height, width, bitmap);
+                WriteBitmapToFileAsText("testOuput.txt", height, width, bitmap);
+                //Open the text file
+                OpenFile("testOuput.txt");
             }
         }
 
@@ -96,7 +107,7 @@ namespace stb_Test
             #endregion
 
             //Read ttf file into byte array
-            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\resources\liberation_mono\LiberationMono-Regular.ttf");
+            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\Windsong.ttf");
             using (var ttf = new PinnedArray<byte>(ttfFileContent))
             {
                 //get pointer of the ttf file content
@@ -113,7 +124,9 @@ namespace stb_Test
                 //bake bitmap for codepoint from 32 to 126
                 STBTrueType.BakeFontBitmap(ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0), 32.0f, bitmapBuffer, BITMAP_W, BITMAP_H, 32, 96, cdata); // no guarantee this fits!
                 //output the bitmap to a text file
-                WriteBitmapToFileAsText("2.txt", BITMAP_H, BITMAP_W, bitmapBuffer);
+                WriteBitmapToFileAsText("testOuput.txt", BITMAP_H, BITMAP_W, bitmapBuffer);
+                //Open the text file
+                OpenFile("testOuput.txt");
             }
         }
 
@@ -137,7 +150,7 @@ namespace stb_Test
             #endregion
 
             //Read ttf file into byte array
-            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\resources\liberation_mono\LiberationMono-Regular.ttf");
+            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\Windsong.ttf");
             using (var ttf = new PinnedArray<byte>(ttfFileContent))
             {
                 //get pointer of the ttf file content
@@ -180,7 +193,9 @@ namespace stb_Test
                     }
                 }
                 //output the bitmap to a text file
-                WriteBitmapToFileAsText("3.txt", BITMAP_H, BITMAP_W, bitmapBuffer);
+                WriteBitmapToFileAsText("testOuput.txt", BITMAP_H, BITMAP_W, bitmapBuffer);
+                //Open the text file
+                OpenFile("testOuput.txt");
             }
         }
 
@@ -209,7 +224,7 @@ namespace stb_Test
                             sb.Append('.');
 #endif
                 }
-                sb.Append('\n');
+                sb.Append("\r\n");
             }
             using (StreamWriter outfile = new StreamWriter(filePath, false))
             {

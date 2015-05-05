@@ -3,11 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_Test", "..\stb_Test\stb_Test.csproj", "{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_Test", "stb_Test\stb_Test.csproj", "{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3828736F-0559-4804-8866-FBD6A3F2902B} = {3828736F-0559-4804-8866-FBD6A3F2902B}
+		{F7B08889-877C-430E-82B4-81918FC67ACE} = {F7B08889-877C-430E-82B4-81918FC67ACE}
+	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_truetypeSharp", "..\stb_truetypeSharp\stb_truetypeSharp.csproj", "{3828736F-0559-4804-8866-FBD6A3F2902B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_truetypeSharp", "stb_truetypeSharp\stb_truetypeSharp.csproj", "{3828736F-0559-4804-8866-FBD6A3F2902B}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_truetype", "..\stb_truetype\stb_truetype.vcxproj", "{F7B08889-877C-430E-82B4-81918FC67ACE}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_truetype", "stb_truetype\stb_truetype.vcxproj", "{F7B08889-877C-430E-82B4-81918FC67ACE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,6 +30,7 @@ Global
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|Win32.Build.0 = Debug|Any CPU
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|x64.ActiveCfg = Debug|x64
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Debug|x64.Build.0 = Debug|x64
 		{73558FD9-4A5C-4648-BEAF-0DF5059A72B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -40,6 +45,7 @@ Global
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|Win32.Build.0 = Debug|Any CPU
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|x64.ActiveCfg = Debug|x64
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Debug|x64.Build.0 = Debug|x64
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -50,6 +56,7 @@ Global
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Release|x64.ActiveCfg = Release|x64
 		{3828736F-0559-4804-8866-FBD6A3F2902B}.Release|x64.Build.0 = Release|x64
 		{F7B08889-877C-430E-82B4-81918FC67ACE}.Debug|Any CPU.ActiveCfg = Debug|Win32
+		{F7B08889-877C-430E-82B4-81918FC67ACE}.Debug|Any CPU.Build.0 = Debug|Win32
 		{F7B08889-877C-430E-82B4-81918FC67ACE}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
 		{F7B08889-877C-430E-82B4-81918FC67ACE}.Debug|Mixed Platforms.Build.0 = Debug|Win32
 		{F7B08889-877C-430E-82B4-81918FC67ACE}.Debug|Win32.ActiveCfg = Debug|Win32
