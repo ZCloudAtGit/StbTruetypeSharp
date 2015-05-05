@@ -13,7 +13,7 @@ Write some demos that render font images with windows GDI and Mono.Cario.
 
 #LICENSE
    __GPLv3__  
-   StbTruetypeSharp, a C# wrapper of stb_truetype
+   StbTruetypeSharp, a C# wrapper of stb_truetype  
    Copyright (C) 2015  Zou Wei(zwcloud@yeah.net)
    
    This program is free software; you can redistribute it and/or modify
