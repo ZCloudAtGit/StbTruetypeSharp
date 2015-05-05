@@ -10,6 +10,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_Test", "stb_Test\stb_Te
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "stb_truetypeSharp", "stb_truetypeSharp\stb_truetypeSharp.csproj", "{3828736F-0559-4804-8866-FBD6A3F2902B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F7B08889-877C-430E-82B4-81918FC67ACE} = {F7B08889-877C-430E-82B4-81918FC67ACE}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "stb_truetype", "stb_truetype\stb_truetype.vcxproj", "{F7B08889-877C-430E-82B4-81918FC67ACE}"
 EndProject
