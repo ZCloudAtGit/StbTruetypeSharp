@@ -64,7 +64,7 @@ namespace stb_Test
             #endregion
 
             //Read ttf file into byte array
-            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\Windsong.ttf");
+            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\SIMHEI.ttf");
             using (var ttf = new PinnedArray<byte>(ttfFileContent))
             {
                 //get pointer of the ttf file content
@@ -81,7 +81,7 @@ namespace stb_Test
                 float scaleY = pixelHeight / (ascent - descent);
                 //get bitmap of one codepoint ‘A’ as well as its width and height
                 int width = 0, height = 0;
-                var bitmap = STBTrueType.GetCodepointBitmap(font, 0f, scaleY, 'A' & 0xFF, ref width, ref height, null, null);
+                var bitmap = STBTrueType.GetCodepointBitmap(font, 0f, scaleY, ((int)'啊')&0xFFFF, ref width, ref height, null, null);
                 //output the bitmap to a text file
                 WriteBitmapToFileAsText("testOuput.txt", height, width, bitmap);
                 //Open the text file
