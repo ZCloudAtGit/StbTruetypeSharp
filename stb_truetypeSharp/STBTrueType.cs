@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.InteropServices;
+using System.ComponentModel;
 
 //using stbtt_uint8 = System.Byte;
 //using stbtt_int8 = System.SByte;
@@ -11,9 +8,6 @@ using System.Runtime.InteropServices;
 //using stbtt_int16 = System.Int16;
 //using stbtt_uint32 = System.UInt32;
 //using stbtt_int32 = System.Int32;
-
-using stbrp_coord = System.Int32;
-using System.ComponentModel;
 
 namespace stb_truetypeSharp
 {
