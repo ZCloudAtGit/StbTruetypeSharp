@@ -11,10 +11,33 @@ namespace TTFViewer
 {
     public partial class MainForm : Form
     {
+        string assemblyDir;
+        string solutionDir;
+        string ttfSampleDir;
+
         public MainForm()
         {
             InitializeComponent();
+
+            assemblyDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
+            solutionDir = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir)));
+            ttfSampleDir = solutionDir + @"\FontSamples\";
+
+            string[] vSampleTTFFilePath = new string[]
+            {
+                "SIMHEI.TTF",
+                "Windsong.ttf"
+            };
+
+            FontSelectorComboBox.Items.AddRange(vSampleTTFFilePath);
+            FontSelectorComboBox.SelectedIndex = 0;
+            FontSelectorComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
+
+        /// <summary>
+        /// pixel height of the bitmap
+        /// </summary>
+        float pixelHeight = 32.0f;
 
         private void ShowGlyphButton_Click(object sender, EventArgs e)
         {
@@ -22,13 +45,8 @@ namespace TTFViewer
             if (text.Length == 0) return;
             var codepoint = text[0];
 
-            #region Init
-            string assemblyDir = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().Location);
-            string solution_dir = Path.GetDirectoryName(Path.GetDirectoryName(Path.GetDirectoryName(assemblyDir)));
-            #endregion
-
             //Read ttf file into byte array
-            byte[] ttfFileContent = File.ReadAllBytes(solution_dir + @"\FontSamples\SIMHEI.TTF");
+            byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
             using (var ttf = new PinnedArray<byte>(ttfFileContent))
             {
                 //get pointer of the ttf file content
@@ -36,8 +54,6 @@ namespace TTFViewer
                 //Initialize fontinfo
                 FontInfo font = new FontInfo();
                 STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
-                //set pixel height of the bitmap
-                float pixelHeight = 32.0f;
                 //get vertical metrics of the font
                 int ascent = 0, descent = 0, lineGap = 0;
                 STBTrueType.GetFontVMetrics(font, ref ascent, ref descent, ref lineGap);
@@ -79,6 +95,11 @@ namespace TTFViewer
             Marshal.Copy(rgbValues, 0, ptr, rgbValues.Length);
             b.UnlockBits(bmpData);
             return b;
+        }
+
+        private void FontHeightNumericUpDown_ValueChanged(object sender, EventArgs e)
+        {
+            pixelHeight = (float)FontHeightNumericUpDown.Value;
         }
     }
 }
