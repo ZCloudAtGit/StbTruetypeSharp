@@ -28,27 +28,41 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.Windows.Forms.Label label2;
+            System.Windows.Forms.Label label3;
             this.codepointTextBox = new System.Windows.Forms.TextBox();
             this.ShowGlyphButton = new System.Windows.Forms.Button();
             this.bitmapPictureBox = new System.Windows.Forms.PictureBox();
             this.FontSelectorComboBox = new System.Windows.Forms.ComboBox();
             this.FontHeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.BuildTypeTabControl = new System.Windows.Forms.TabControl();
+            this.tabPage1 = new System.Windows.Forms.TabPage();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.label1 = new System.Windows.Forms.Label();
+            this.FirstCodepointTextBox = new System.Windows.Forms.TextBox();
+            this.CodepointCountNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            label2 = new System.Windows.Forms.Label();
+            label3 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bitmapPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FontHeightNumericUpDown)).BeginInit();
+            this.BuildTypeTabControl.SuspendLayout();
+            this.tabPage1.SuspendLayout();
+            this.tabPage2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CodepointCountNumericUpDown)).BeginInit();
             this.SuspendLayout();
             // 
             // codepointTextBox
             // 
-            this.codepointTextBox.Location = new System.Drawing.Point(12, 38);
+            this.codepointTextBox.Location = new System.Drawing.Point(6, 18);
             this.codepointTextBox.Name = "codepointTextBox";
-            this.codepointTextBox.Size = new System.Drawing.Size(121, 21);
+            this.codepointTextBox.Size = new System.Drawing.Size(93, 21);
             this.codepointTextBox.TabIndex = 0;
             // 
             // ShowGlyphButton
             // 
-            this.ShowGlyphButton.Location = new System.Drawing.Point(140, 36);
+            this.ShowGlyphButton.Location = new System.Drawing.Point(12, 135);
             this.ShowGlyphButton.Name = "ShowGlyphButton";
-            this.ShowGlyphButton.Size = new System.Drawing.Size(120, 23);
+            this.ShowGlyphButton.Size = new System.Drawing.Size(248, 23);
             this.ShowGlyphButton.TabIndex = 1;
             this.ShowGlyphButton.Text = "Show";
             this.ShowGlyphButton.UseVisualStyleBackColor = true;
@@ -56,7 +70,7 @@
             // 
             // bitmapPictureBox
             // 
-            this.bitmapPictureBox.Location = new System.Drawing.Point(12, 65);
+            this.bitmapPictureBox.Location = new System.Drawing.Point(12, 164);
             this.bitmapPictureBox.Name = "bitmapPictureBox";
             this.bitmapPictureBox.Size = new System.Drawing.Size(100, 50);
             this.bitmapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -73,7 +87,7 @@
             // 
             // FontHeightNumericUpDown
             // 
-            this.FontHeightNumericUpDown.Location = new System.Drawing.Point(140, 12);
+            this.FontHeightNumericUpDown.Location = new System.Drawing.Point(140, 11);
             this.FontHeightNumericUpDown.Maximum = new decimal(new int[] {
             120,
             0,
@@ -94,20 +108,108 @@
             0});
             this.FontHeightNumericUpDown.ValueChanged += new System.EventHandler(this.FontHeightNumericUpDown_ValueChanged);
             // 
+            // BuildTypeTabControl
+            // 
+            this.BuildTypeTabControl.Controls.Add(this.tabPage1);
+            this.BuildTypeTabControl.Controls.Add(this.tabPage2);
+            this.BuildTypeTabControl.Location = new System.Drawing.Point(12, 38);
+            this.BuildTypeTabControl.Name = "BuildTypeTabControl";
+            this.BuildTypeTabControl.SelectedIndex = 0;
+            this.BuildTypeTabControl.Size = new System.Drawing.Size(248, 91);
+            this.BuildTypeTabControl.TabIndex = 5;
+            // 
+            // tabPage1
+            // 
+            this.tabPage1.Controls.Add(this.label1);
+            this.tabPage1.Controls.Add(this.codepointTextBox);
+            this.tabPage1.Location = new System.Drawing.Point(4, 22);
+            this.tabPage1.Name = "tabPage1";
+            this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage1.Size = new System.Drawing.Size(240, 65);
+            this.tabPage1.TabIndex = 0;
+            this.tabPage1.Text = "Single";
+            this.tabPage1.UseVisualStyleBackColor = true;
+            // 
+            // tabPage2
+            // 
+            this.tabPage2.Controls.Add(this.CodepointCountNumericUpDown);
+            this.tabPage2.Controls.Add(label3);
+            this.tabPage2.Controls.Add(label2);
+            this.tabPage2.Controls.Add(this.FirstCodepointTextBox);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(240, 65);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Range";
+            this.tabPage2.UseVisualStyleBackColor = true;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 3);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(83, 12);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "The character";
+            // 
+            // FirstCodepointTextBox
+            // 
+            this.FirstCodepointTextBox.Location = new System.Drawing.Point(6, 25);
+            this.FirstCodepointTextBox.Name = "FirstCodepointTextBox";
+            this.FirstCodepointTextBox.Size = new System.Drawing.Size(90, 21);
+            this.FirstCodepointTextBox.TabIndex = 1;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(6, 10);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(95, 12);
+            label2.TabIndex = 3;
+            label2.Text = "First character";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(142, 10);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(95, 12);
+            label3.TabIndex = 4;
+            label3.Text = "Character count";
+            // 
+            // CodepointCountNumericUpDown
+            // 
+            this.CodepointCountNumericUpDown.Location = new System.Drawing.Point(144, 25);
+            this.CodepointCountNumericUpDown.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.CodepointCountNumericUpDown.Name = "CodepointCountNumericUpDown";
+            this.CodepointCountNumericUpDown.Size = new System.Drawing.Size(90, 21);
+            this.CodepointCountNumericUpDown.TabIndex = 5;
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(284, 262);
+            this.Controls.Add(this.BuildTypeTabControl);
             this.Controls.Add(this.FontHeightNumericUpDown);
             this.Controls.Add(this.FontSelectorComboBox);
             this.Controls.Add(this.bitmapPictureBox);
             this.Controls.Add(this.ShowGlyphButton);
-            this.Controls.Add(this.codepointTextBox);
             this.Name = "MainForm";
             this.Text = "TTFViewer";
             ((System.ComponentModel.ISupportInitialize)(this.bitmapPictureBox)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.FontHeightNumericUpDown)).EndInit();
+            this.BuildTypeTabControl.ResumeLayout(false);
+            this.tabPage1.ResumeLayout(false);
+            this.tabPage1.PerformLayout();
+            this.tabPage2.ResumeLayout(false);
+            this.tabPage2.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CodepointCountNumericUpDown)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -120,6 +222,12 @@
         private System.Windows.Forms.PictureBox bitmapPictureBox;
         private System.Windows.Forms.ComboBox FontSelectorComboBox;
         private System.Windows.Forms.NumericUpDown FontHeightNumericUpDown;
+        private System.Windows.Forms.TabControl BuildTypeTabControl;
+        private System.Windows.Forms.TabPage tabPage1;
+        private System.Windows.Forms.TabPage tabPage2;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.TextBox FirstCodepointTextBox;
+        private System.Windows.Forms.NumericUpDown CodepointCountNumericUpDown;
     }
 }
 

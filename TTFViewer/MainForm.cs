@@ -15,6 +15,8 @@ namespace TTFViewer
         string solutionDir;
         string ttfSampleDir;
 
+        int BuildType = 1;
+
         public MainForm()
         {
             InitializeComponent();
@@ -41,9 +43,37 @@ namespace TTFViewer
 
         private void ShowGlyphButton_Click(object sender, EventArgs e)
         {
-            var text = codepointTextBox.Text;
-            if (text.Length == 0) return;
-            var codepoint = text[0];
+            byte[] bitmapData = null;
+            int width = 0, height = 0;
+
+            BuildType = BuildTypeTabControl.SelectedIndex;
+
+            //Create bitmap form the raw data
+            Bitmap bitmap = null;
+            switch(BuildType)
+            {
+                default:
+                case 0:
+                    var text = codepointTextBox.Text;
+                    if (text.Length == 0) return;
+                    var codepoint = text[0];
+                    bitmapData = CreateGlyph(codepoint, ref width, ref height);
+                    break;
+                case 1:
+                    var firstChar = FirstCodepointTextBox.Text[0];
+                    var charCount = (int)CodepointCountNumericUpDown.Value;
+                    bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
+                    break;
+            }
+            bitmap = CreateBitmapFromRawData(bitmapData, width, height);
+            
+            //Show the bitmap
+            bitmapPictureBox.Image = bitmap;
+        }
+
+        private byte[] CreateGlyph(char codepoint, ref int width, ref int height)
+        {
+            byte[] bitmapData = null;
 
             //Read ttf file into byte array
             byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
@@ -60,13 +90,37 @@ namespace TTFViewer
                 //calculate the vertical scale
                 float scaleY = pixelHeight / (ascent - descent);
                 //get bitmap of the codepoint as well as its width and height
-                int width = 0, height = 0;
-                var bitmapData = STBTrueType.GetCodepointBitmap(font, 0f, scaleY, codepoint & 0xFFFF, ref width, ref height, null, null);
-                //Create bitmap form the raw data
-                var bitmap = CreateBitmapFromRawData(bitmapData, width, height);
-                //Show the bitmap
-                bitmapPictureBox.Image = bitmap;
+                bitmapData = STBTrueType.GetCodepointBitmap(font, 0f, scaleY, codepoint & 0xFFFF, ref width, ref height, null, null);
             }
+            return bitmapData;
+        }
+
+        private byte[] CreateGlyph(char firstChar, int charCount, ref int width, ref int height)
+        {
+            byte[] bitmapData = null;
+
+            //Read ttf file into byte array
+            byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
+            using (var ttf = new PinnedArray<byte>(ttfFileContent))
+            {
+                //get pointer of the ttf file content
+                var ttf_buffer = ttf.Pointer;
+                //Initialize fontinfo
+                FontInfo font = new FontInfo();
+                STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
+                //set bitmap size
+                const int BITMAP_W = 512;
+                const int BITMAP_H = 512;
+                //allocate bitmap buffer
+                byte[] bitmapBuffer = new byte[BITMAP_W * BITMAP_W];
+                BakedChar[] cdata = new BakedChar[charCount]; // ASCII 32..126 is 95 glyphs
+                //bake bitmap for codepoint from firstChar to firstChar + charCount - 1
+                STBTrueType.BakeFontBitmap(ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0), pixelHeight, bitmapBuffer, BITMAP_W, BITMAP_H, firstChar, charCount, cdata); // no guarantee this fits!
+                bitmapData = bitmapBuffer;
+                width = BITMAP_W;
+                height = BITMAP_H;
+            }
+            return bitmapData;
         }
 
         private Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)
