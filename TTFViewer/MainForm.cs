@@ -6,6 +6,7 @@ using MarshalHelper;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
+using System.Collections.Generic;
 
 namespace TTFViewer
 {
@@ -54,15 +55,26 @@ namespace TTFViewer
             {
                 default:
                 case 0:
-                    var text = codepointTextBox.Text;
-                    if (text.Length == 0) return;
-                    var codepoint = text[0];
-                    bitmapData = CreateGlyph(codepoint, ref width, ref height);
+                    {
+                        var text = codepointTextBox.Text;
+                        if (text.Length == 0) return;
+                        var codepoint = text[0];
+                        bitmapData = CreateGlyph(codepoint, ref width, ref height);
+                    }
                     break;
                 case 1:
-                    var firstChar = FirstCodepointTextBox.Text[0];
-                    var charCount = (int)CodepointCountNumericUpDown.Value;
-                    bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
+                    {
+                        var firstChar = FirstCodepointTextBox.Text[0];
+                        var charCount = (int)CodepointCountNumericUpDown.Value;
+                        bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
+                    }
+                    break;
+                case 2:
+                    {
+                        var text = CharactersToPackTextBox.Text;
+                        if (text.Length == 0) return;
+                        bitmapData = CreateGlyph(text, ref width, ref height);
+                    }
                     break;
             }
             bitmap = CreateBitmapFromRawData(bitmapData, width, height);
@@ -113,7 +125,7 @@ namespace TTFViewer
                 const int BITMAP_H = 512;
                 //allocate bitmap buffer
                 byte[] bitmapBuffer = new byte[BITMAP_W * BITMAP_W];
-                BakedChar[] cdata = new BakedChar[charCount]; // ASCII 32..126 is 95 glyphs
+                BakedChar[] cdata = new BakedChar[charCount];
                 //bake bitmap for codepoint from firstChar to firstChar + charCount - 1
                 STBTrueType.BakeFontBitmap(ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0), pixelHeight, bitmapBuffer, BITMAP_W, BITMAP_H, firstChar, charCount, cdata); // no guarantee this fits!
                 bitmapData = bitmapBuffer;
@@ -121,6 +133,104 @@ namespace TTFViewer
                 height = BITMAP_H;
             }
             return bitmapData;
+        }
+
+        private byte[] CreateGlyph(string charactersToPack, ref int width, ref int height)
+        {
+            byte[] bitmapData = null;
+
+            //Read ttf file into byte array
+            byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
+            using (var ttf = new PinnedArray<byte>(ttfFileContent))
+            {
+                //get pointer of the ttf file content
+                var ttf_buffer = ttf.Pointer;
+                //Initialize fontinfo
+                FontInfo font = new FontInfo();
+                STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
+                PackContext pc = new PackContext();
+                width = 512;
+                height = 512;
+                bitmapData = new byte[width * height];
+                STBTrueType.PackBegin(ref pc, bitmapData, width, height, 0, 1, IntPtr.Zero);
+
+                //Ref: https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/test_truetype.c
+                //allocate packed char buffer
+                PackedChar[] pdata = new PackedChar[charactersToPack.Length];
+
+                using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
+                {
+                    //get pointer of the pdata
+                    var ptr_pdata = pin_pdata.Pointer;
+                    PackRange[] vPackRange = new PackRange[charactersToPack.Length];
+                    for (var i=0; i<charactersToPack.Length; ++i)
+                    {
+                        //create a PackRange of one character
+                        PackRange pr = new PackRange();
+                        pr.chardata_for_range = IntPtr.Add(ptr_pdata, i * Marshal.SizeOf(typeof(PackedChar)));
+                        pr.first_unicode_char_in_range = charactersToPack[i] & 0xFFFF;
+                        pr.num_chars_in_range = 1;
+                        pr.font_size = pixelHeight;
+                        //add it to the range list
+                        vPackRange[i] = pr;
+                    }
+                    //STBTrueType.PackSetOversampling(ref pc, 2, 2);
+                    STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
+                    STBTrueType.PackEnd(ref pc);
+                }
+            }
+            return bitmapData;
+        }
+
+        private byte[] CreateGlyphForText(string text, ref int width, ref int height)
+        {
+            byte[] bitmapData = null;
+
+            //Read ttf file into byte array
+            byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
+            using (var ttf = new PinnedArray<byte>(ttfFileContent))
+            {
+                //get pointer of the ttf file content
+                var ttf_buffer = ttf.Pointer;
+                //Initialize fontinfo
+                FontInfo font = new FontInfo();
+                STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
+                PackContext pc = new PackContext();
+                width = 512;
+                height = 512;
+                bitmapData = new byte[width * height];
+                STBTrueType.PackBegin(ref pc, bitmapData, width, height, 0, 1, IntPtr.Zero);
+
+                //Ref: https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/test_truetype.c
+                //allocate packed char buffer
+                PackedChar[] pdata = new PackedChar[text.Length];
+
+                using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
+                {
+                    //get pointer of the pdata
+                    var ptr_pdata = pin_pdata.Pointer;
+                    PackRange[] vPackRange = new PackRange[text.Length];
+                    for (var i = 0; i < text.Length; ++i)
+                    {
+                        //create a PackRange of one character
+                        PackRange pr = new PackRange();
+                        pr.chardata_for_range = IntPtr.Add(ptr_pdata, i * Marshal.SizeOf(typeof(PackedChar)));
+                        pr.first_unicode_char_in_range = text[i] & 0xFFFF;
+                        pr.num_chars_in_range = 1;
+                        pr.font_size = pixelHeight;
+                        //add it to the range list
+                        vPackRange[i] = pr;
+                    }
+                    //STBTrueType.PackSetOversampling(ref pc, 2, 2);
+                    STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
+                    STBTrueType.PackEnd(ref pc);
+                    //
+                    //TODO use stbtt_GetPackedQuad to get character bitmaps in packed bitmap
+                    //https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/oversample/main.c
+                    //
+                }
+            }
+            return bitmapData;//Not this
         }
 
         private Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)

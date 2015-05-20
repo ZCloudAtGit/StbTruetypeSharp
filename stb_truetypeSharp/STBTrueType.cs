@@ -238,9 +238,6 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
         #endregion
 
         #region Improved 3D API
-        /*
-         * #include "stb_rect_pack.h"           -- optional, but you really want it
-         */
 
         /// <summary>
         /// Initializes a packing context stored in the passed-in PackContext.
@@ -260,7 +257,7 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
         /// <returns>0 on failure, 1 on success.</returns>
         /// <remarks>a 1-channel bitmap that is weight x height.</remarks>
         [DllImport("stb_truetype.dll", EntryPoint="stbtt_PackBegin", CallingConvention=CallingConvention.Cdecl)]
-        public static extern int PackBegin(ref PackContext spc, IntPtr pixels, int width, int height, int stride_in_bytes, int padding, IntPtr alloc_context);
+        public static extern int PackBegin(ref PackContext spc, byte[] pixels, int width, int height, int stride_in_bytes, int padding, IntPtr alloc_context);
 
         /// <summary>
         /// Creates character bitmaps from the font_index'th font found in fontdata
@@ -592,16 +589,16 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
 #endregion
 
         /// <summary>
-        /// 
+        /// Make a bitmap for a codepoint with some customization
         /// </summary>
-        /// <param name="info"></param>
-        /// <param name="output"></param>
-        /// <param name="out_w"></param>
-        /// <param name="out_h"></param>
-        /// <param name="out_stride"></param>
-        /// <param name="scale_x"></param>
-        /// <param name="scale_y"></param>
-        /// <param name="codepoint"></param>
+        /// <param name="info">font info</param>
+        /// <param name="output">bitmap color data</param>
+        /// <param name="out_w">width of the bitmap</param>
+        /// <param name="out_h">height of the bitmap</param>
+        /// <param name="out_stride">row spacing</param>
+        /// <param name="scale_x">x size</param>
+        /// <param name="scale_y">y size</param>
+        /// <param name="codepoint">codepoint</param>
         /// <remarks>
         /// the same as stbtt_GetCodepointBitmap, but you pass in storage for the bitmap
         /// in the form of 'output', with row spacing of 'out_stride' bytes. the bitmap
@@ -620,16 +617,16 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
             int codepoint);
 
         /// <summary>
-        /// 
+        /// Get the bound box of the bitmap centered around the glyph origin
         /// </summary>
-        /// <param name="font"></param>
-        /// <param name="codepoint"></param>
-        /// <param name="scale_x"></param>
-        /// <param name="scale_y"></param>
-        /// <param name="ix0"></param>
-        /// <param name="iy0"></param>
-        /// <param name="ix1"></param>
-        /// <param name="iy1"></param>
+        /// <param name="font">font info</param>
+        /// <param name="codepoint">codepoint</param>
+        /// <param name="scale_x">x size</param>
+        /// <param name="scale_y">y size</param>
+        /// <param name="ix0">left</param>
+        /// <param name="iy0">top</param>
+        /// <param name="ix1">right</param>
+        /// <param name="iy1">bottom</param>
         /// <remarks>
         /// get the bbox of the bitmap centered around the glyph origin; so the
         /// bitmap width is ix1-ix0, height is iy1-iy0, and location to place

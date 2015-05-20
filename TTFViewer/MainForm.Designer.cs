@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.Label label2;
             System.Windows.Forms.Label label3;
+            System.Windows.Forms.Label label5;
             this.codepointTextBox = new System.Windows.Forms.TextBox();
             this.ShowGlyphButton = new System.Windows.Forms.Button();
             this.bitmapPictureBox = new System.Windows.Forms.PictureBox();
@@ -37,19 +38,50 @@
             this.FontHeightNumericUpDown = new System.Windows.Forms.NumericUpDown();
             this.BuildTypeTabControl = new System.Windows.Forms.TabControl();
             this.tabPage1 = new System.Windows.Forms.TabPage();
-            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.label1 = new System.Windows.Forms.Label();
-            this.FirstCodepointTextBox = new System.Windows.Forms.TextBox();
+            this.tabPage2 = new System.Windows.Forms.TabPage();
             this.CodepointCountNumericUpDown = new System.Windows.Forms.NumericUpDown();
+            this.FirstCodepointTextBox = new System.Windows.Forms.TextBox();
+            this.tabPage3 = new System.Windows.Forms.TabPage();
+            this.CharactersToPackTextBox = new System.Windows.Forms.TextBox();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
+            label5 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.bitmapPictureBox)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.FontHeightNumericUpDown)).BeginInit();
             this.BuildTypeTabControl.SuspendLayout();
             this.tabPage1.SuspendLayout();
             this.tabPage2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CodepointCountNumericUpDown)).BeginInit();
+            this.tabPage3.SuspendLayout();
             this.SuspendLayout();
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(6, 10);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(95, 12);
+            label2.TabIndex = 3;
+            label2.Text = "First character";
+            // 
+            // label3
+            // 
+            label3.AutoSize = true;
+            label3.Location = new System.Drawing.Point(142, 10);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(95, 12);
+            label3.TabIndex = 4;
+            label3.Text = "Character count";
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Location = new System.Drawing.Point(4, 3);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(137, 12);
+            label5.TabIndex = 2;
+            label5.Text = "Character to be packed";
             // 
             // codepointTextBox
             // 
@@ -60,7 +92,7 @@
             // 
             // ShowGlyphButton
             // 
-            this.ShowGlyphButton.Location = new System.Drawing.Point(12, 135);
+            this.ShowGlyphButton.Location = new System.Drawing.Point(12, 154);
             this.ShowGlyphButton.Name = "ShowGlyphButton";
             this.ShowGlyphButton.Size = new System.Drawing.Size(248, 23);
             this.ShowGlyphButton.TabIndex = 1;
@@ -70,7 +102,7 @@
             // 
             // bitmapPictureBox
             // 
-            this.bitmapPictureBox.Location = new System.Drawing.Point(12, 164);
+            this.bitmapPictureBox.Location = new System.Drawing.Point(12, 200);
             this.bitmapPictureBox.Name = "bitmapPictureBox";
             this.bitmapPictureBox.Size = new System.Drawing.Size(100, 50);
             this.bitmapPictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
@@ -112,10 +144,11 @@
             // 
             this.BuildTypeTabControl.Controls.Add(this.tabPage1);
             this.BuildTypeTabControl.Controls.Add(this.tabPage2);
+            this.BuildTypeTabControl.Controls.Add(this.tabPage3);
             this.BuildTypeTabControl.Location = new System.Drawing.Point(12, 38);
             this.BuildTypeTabControl.Name = "BuildTypeTabControl";
             this.BuildTypeTabControl.SelectedIndex = 0;
-            this.BuildTypeTabControl.Size = new System.Drawing.Size(248, 91);
+            this.BuildTypeTabControl.Size = new System.Drawing.Size(248, 110);
             this.BuildTypeTabControl.TabIndex = 5;
             // 
             // tabPage1
@@ -125,24 +158,10 @@
             this.tabPage1.Location = new System.Drawing.Point(4, 22);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(240, 65);
+            this.tabPage1.Size = new System.Drawing.Size(240, 84);
             this.tabPage1.TabIndex = 0;
             this.tabPage1.Text = "Single";
             this.tabPage1.UseVisualStyleBackColor = true;
-            // 
-            // tabPage2
-            // 
-            this.tabPage2.Controls.Add(this.CodepointCountNumericUpDown);
-            this.tabPage2.Controls.Add(label3);
-            this.tabPage2.Controls.Add(label2);
-            this.tabPage2.Controls.Add(this.FirstCodepointTextBox);
-            this.tabPage2.Location = new System.Drawing.Point(4, 22);
-            this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage2.Size = new System.Drawing.Size(240, 65);
-            this.tabPage2.TabIndex = 1;
-            this.tabPage2.Text = "Range";
-            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -153,30 +172,19 @@
             this.label1.TabIndex = 1;
             this.label1.Text = "The character";
             // 
-            // FirstCodepointTextBox
+            // tabPage2
             // 
-            this.FirstCodepointTextBox.Location = new System.Drawing.Point(6, 25);
-            this.FirstCodepointTextBox.Name = "FirstCodepointTextBox";
-            this.FirstCodepointTextBox.Size = new System.Drawing.Size(90, 21);
-            this.FirstCodepointTextBox.TabIndex = 1;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(6, 10);
-            label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(95, 12);
-            label2.TabIndex = 3;
-            label2.Text = "First character";
-            // 
-            // label3
-            // 
-            label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(142, 10);
-            label3.Name = "label3";
-            label3.Size = new System.Drawing.Size(95, 12);
-            label3.TabIndex = 4;
-            label3.Text = "Character count";
+            this.tabPage2.Controls.Add(this.CodepointCountNumericUpDown);
+            this.tabPage2.Controls.Add(label3);
+            this.tabPage2.Controls.Add(label2);
+            this.tabPage2.Controls.Add(this.FirstCodepointTextBox);
+            this.tabPage2.Location = new System.Drawing.Point(4, 22);
+            this.tabPage2.Name = "tabPage2";
+            this.tabPage2.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage2.Size = new System.Drawing.Size(240, 84);
+            this.tabPage2.TabIndex = 1;
+            this.tabPage2.Text = "Range";
+            this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // CodepointCountNumericUpDown
             // 
@@ -189,6 +197,32 @@
             this.CodepointCountNumericUpDown.Name = "CodepointCountNumericUpDown";
             this.CodepointCountNumericUpDown.Size = new System.Drawing.Size(90, 21);
             this.CodepointCountNumericUpDown.TabIndex = 5;
+            // 
+            // FirstCodepointTextBox
+            // 
+            this.FirstCodepointTextBox.Location = new System.Drawing.Point(6, 25);
+            this.FirstCodepointTextBox.Name = "FirstCodepointTextBox";
+            this.FirstCodepointTextBox.Size = new System.Drawing.Size(90, 21);
+            this.FirstCodepointTextBox.TabIndex = 1;
+            // 
+            // tabPage3
+            // 
+            this.tabPage3.Controls.Add(this.CharactersToPackTextBox);
+            this.tabPage3.Controls.Add(label5);
+            this.tabPage3.Location = new System.Drawing.Point(4, 22);
+            this.tabPage3.Name = "tabPage3";
+            this.tabPage3.Padding = new System.Windows.Forms.Padding(3);
+            this.tabPage3.Size = new System.Drawing.Size(240, 84);
+            this.tabPage3.TabIndex = 2;
+            this.tabPage3.Text = "Pack";
+            this.tabPage3.UseVisualStyleBackColor = true;
+            // 
+            // CharactersToPackTextBox
+            // 
+            this.CharactersToPackTextBox.Location = new System.Drawing.Point(6, 18);
+            this.CharactersToPackTextBox.Name = "CharactersToPackTextBox";
+            this.CharactersToPackTextBox.Size = new System.Drawing.Size(228, 21);
+            this.CharactersToPackTextBox.TabIndex = 3;
             // 
             // MainForm
             // 
@@ -210,6 +244,8 @@
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CodepointCountNumericUpDown)).EndInit();
+            this.tabPage3.ResumeLayout(false);
+            this.tabPage3.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -228,6 +264,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox FirstCodepointTextBox;
         private System.Windows.Forms.NumericUpDown CodepointCountNumericUpDown;
+        private System.Windows.Forms.TabPage tabPage3;
+        private System.Windows.Forms.TextBox CharactersToPackTextBox;
     }
 }
 

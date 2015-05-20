@@ -163,34 +163,29 @@ namespace stb_Test
                 const int BITMAP_H = 512;
                 //allocate bitmap buffer
                 byte[] bitmapBuffer = new byte[BITMAP_W * BITMAP_H];
-                using (var bitmapManaged = new PinnedArray<byte>(bitmapBuffer))
+                //Initialize a pack context
+                PackContext pc = new PackContext();
+                STBTrueType.PackBegin(ref pc, bitmapBuffer, BITMAP_W, BITMAP_H, 0, 1, IntPtr.Zero);
+                //allocate packed char buffer
+                PackedChar[] pdata = new PackedChar[256 * 2];
+                using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
                 {
-                    //get pointer of the bitmap buffer
-                    var temp_bitmap = bitmapManaged.Pointer;
-                    //Initialize a pack context
-                    PackContext pc = new PackContext();
-                    STBTrueType.PackBegin(ref pc, temp_bitmap, BITMAP_W, BITMAP_H, 0, 1, IntPtr.Zero);
-                    //allocate packed char buffer
-                    PackedChar[] pdata = new PackedChar[256 * 2];
-                    using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
-                    {
-                        //get pointer of the bitmap buffer
-                        var ptr_pdata = pin_pdata.Pointer;
-                        //set pack ranges
-                        PackRange[] ranges = new PackRange[2];
-                        ranges[0].chardata_for_range = ptr_pdata;
-                        ranges[0].first_unicode_char_in_range = 32;
-                        ranges[0].num_chars_in_range = 95;
-                        ranges[0].font_size = 20.0f;
-                        ranges[1].chardata_for_range = IntPtr.Add(ptr_pdata, 256 * Marshal.SizeOf(pdata[0]));
-                        ranges[1].first_unicode_char_in_range = 0xa0;
-                        ranges[1].num_chars_in_range = 0x100 - 0xa0;
-                        ranges[1].font_size = 20.0f;
-                        //Bake bitmap
-                        STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, ranges, 2);
-                        //Clean up
-                        STBTrueType.PackEnd(ref pc);
-                    }
+                    //get pointer of the pdata
+                    var ptr_pdata = pin_pdata.Pointer;
+                    //set pack ranges
+                    PackRange[] ranges = new PackRange[2];
+                    ranges[0].chardata_for_range = ptr_pdata;
+                    ranges[0].first_unicode_char_in_range = 32;
+                    ranges[0].num_chars_in_range = 95;
+                    ranges[0].font_size = 20.0f;
+                    ranges[1].chardata_for_range = IntPtr.Add(ptr_pdata, 256 * Marshal.SizeOf(pdata[0]));
+                    ranges[1].first_unicode_char_in_range = 0xa0;
+                    ranges[1].num_chars_in_range = 0x100 - 0xa0;
+                    ranges[1].font_size = 20.0f;
+                    //Bake bitmap
+                    STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, ranges, 2);
+                    //Clean up
+                    STBTrueType.PackEnd(ref pc);
                 }
                 //output the bitmap to a text file
                 WriteBitmapToFileAsText("testOuput.txt", BITMAP_H, BITMAP_W, bitmapBuffer);
