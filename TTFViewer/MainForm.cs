@@ -7,6 +7,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 namespace TTFViewer
 {
@@ -60,6 +61,7 @@ namespace TTFViewer
                         if (text.Length == 0) return;
                         var codepoint = text[0];
                         bitmapData = CreateGlyph(codepoint, ref width, ref height);
+                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
                     }
                     break;
                 case 1:
@@ -67,6 +69,7 @@ namespace TTFViewer
                         var firstChar = FirstCodepointTextBox.Text[0];
                         var charCount = (int)CodepointCountNumericUpDown.Value;
                         bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
+                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
                     }
                     break;
                 case 2:
@@ -74,10 +77,17 @@ namespace TTFViewer
                         var text = CharactersToPackTextBox.Text;
                         if (text.Length == 0) return;
                         bitmapData = CreateGlyph(text, ref width, ref height);
+                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
+                    }
+                    break;
+                case 3:
+                    {
+                        var text = TextTextBox.Text;
+                        if (text.Length == 0) return;
+                        bitmap = CreateGlyphForText(text, ref width, ref height);
                     }
                     break;
             }
-            bitmap = CreateBitmapFromRawData(bitmapData, width, height);
             
             //Show the bitmap
             bitmapPictureBox.Image = bitmap;
@@ -182,9 +192,10 @@ namespace TTFViewer
             return bitmapData;
         }
 
-        private byte[] CreateGlyphForText(string text, ref int width, ref int height)
+        private Bitmap CreateGlyphForText(string text, ref int width, ref int height)
         {
             byte[] bitmapData = null;
+            Bitmap bmp = new Bitmap(512, 512, PixelFormat.Format24bppRgb);
 
             //Read ttf file into byte array
             byte[] ttfFileContent = File.ReadAllBytes(ttfSampleDir + '\\' + FontSelectorComboBox.SelectedItem as string);
@@ -224,13 +235,35 @@ namespace TTFViewer
                     //STBTrueType.PackSetOversampling(ref pc, 2, 2);
                     STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
                     STBTrueType.PackEnd(ref pc);
+                    var bitmapPackedCharacters = CreateBitmapFromRawData(bitmapData, width, height);
                     //
                     //TODO use stbtt_GetPackedQuad to get character bitmaps in packed bitmap
                     //https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/oversample/main.c
                     //
+                    Graphics g = Graphics.FromImage(bmp);
+                    g.Clear(Color.White);
+                    float x = 0, y = 0;
+                    for (var i=0; i<text.Length; ++i)
+                    {
+                        var character = text[i];
+                        AlignedQuad aq;
+                        STBTrueType.GetPackedQuad(pdata, width, height, i, ref x, ref y, out aq, 0);
+                        Debug.WriteLine(i);
+                        Debug.WriteLine("x: {0}, y: {1}", x, y);
+                        Debug.WriteLine("src: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
+                        Debug.WriteLine("dest: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.x0, aq.y0, aq.x1, aq.y1);
+                        var rectSrc = RectangleF.FromLTRB(aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
+                        var rectDest = RectangleF.FromLTRB(aq.x0, aq.y0, aq.x1, aq.y1);
+                        rectDest.Offset(x,y);
+                        rectDest.Y = -rectDest.Y;//HACK temporary method, not sure about how to handle y correctly
+                        Debug.WriteLine("rectSrc {0}", rectSrc);
+                        Debug.WriteLine("rectDest {0}", rectDest);
+                        g.DrawImage(bitmapPackedCharacters, rectDest, rectSrc, GraphicsUnit.Pixel);
+                    }
+                    g.Flush();
                 }
             }
-            return bitmapData;//Not this
+            return bmp;
         }
 
         private Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)

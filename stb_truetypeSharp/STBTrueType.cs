@@ -213,7 +213,7 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
         /// <param name="chardata">character data</param>
         /// <param name="pw">width of bitmap</param>
         /// <param name="ph">width of bitmap</param>
-        /// <param name="char_index">indexes of characters to display</param>
+        /// <param name="char_index">value of (character - first_char)</param>
         /// <param name="xpos">current x position in screen pixel space</param>
         /// <param name="ypos">current y position in screen pixel space</param>
         /// <param name="q">output, quad to draw</param>
@@ -360,19 +360,20 @@ Bottom right position({4},{5}), texture coordinate({6},{7})", x0, y0, s0, t0, x1
         /// <param name="chardata">character data</param>
         /// <param name="pw"></param>
         /// <param name="ph"></param>
-        /// <param name="char_index">index of the character to display</param>
+        /// <param name="char_index">value of (character - first_char)</param>
         /// <param name="xpos">current position x in screen pixel space</param>
         /// <param name="ypos">current position y in screen pixel space</param>
         /// <param name="q">quad to draw</param>
         /// <param name="align_to_integer"></param>
+        /// <remarks></remarks>
         [DllImport("stb_truetype.dll", EntryPoint = "stbtt_GetPackedQuad", CallingConvention = CallingConvention.Cdecl)]
         public static extern void GetPackedQuad(
-            [In, MarshalAs(UnmanagedType.LPArray, SizeParamIndex = 4)]
+            [In, MarshalAs(UnmanagedType.LPArray)]
             PackedChar[] chardata,
             int pw,
             int ph,
             int char_index,
-            float xpos, float ypos,
+            ref float xpos, ref float ypos,
             out AlignedQuad q,
             int align_to_integer);
 
