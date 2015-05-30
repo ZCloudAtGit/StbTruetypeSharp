@@ -1,4 +1,5 @@
-﻿using System;
+﻿#define DebugOutput
+using System;
 using System.IO;
 using System.Windows.Forms;
 using stb_truetypeSharp;
@@ -30,7 +31,8 @@ namespace TTFViewer
             string[] vSampleTTFFilePath = new string[]
             {
                 "SIMHEI.TTF",
-                "Windsong.ttf"
+                "Windsong.ttf",
+                "ARIAL.ttf"
             };
 
             FontSelectorComboBox.Items.AddRange(vSampleTTFFilePath);
@@ -206,6 +208,9 @@ namespace TTFViewer
                 //Initialize fontinfo
                 FontInfo font = new FontInfo();
                 STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
+                
+                //TODO build packed characters' bitmap for ASCII/Chinese/Japanse/Korean characters etc.
+                
                 PackContext pc = new PackContext();
                 width = 512;
                 height = 512;
@@ -232,14 +237,15 @@ namespace TTFViewer
                         //add it to the range list
                         vPackRange[i] = pr;
                     }
-                    //STBTrueType.PackSetOversampling(ref pc, 2, 2);
+                    STBTrueType.PackSetOversampling(ref pc, 2, 2);
                     STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
                     STBTrueType.PackEnd(ref pc);
                     var bitmapPackedCharacters = CreateBitmapFromRawData(bitmapData, width, height);
-                    //
-                    //TODO use stbtt_GetPackedQuad to get character bitmaps in packed bitmap
+
+                    //ref
                     //https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/oversample/main.c
-                    //
+
+                    //Draw characters to a bitmap by order
                     Graphics g = Graphics.FromImage(bmp);
                     g.Clear(Color.White);
                     float x = 0, y = 0;
@@ -247,17 +253,21 @@ namespace TTFViewer
                     {
                         var character = text[i];
                         AlignedQuad aq;
+                        //get character bitmaps in packed bitmap
                         STBTrueType.GetPackedQuad(pdata, width, height, i, ref x, ref y, out aq, 0);
+#if DebugOutput
                         Debug.WriteLine(i);
                         Debug.WriteLine("x: {0}, y: {1}", x, y);
                         Debug.WriteLine("src: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
                         Debug.WriteLine("dest: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.x0, aq.y0, aq.x1, aq.y1);
+#endif
                         var rectSrc = RectangleF.FromLTRB(aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
                         var rectDest = RectangleF.FromLTRB(aq.x0, aq.y0, aq.x1, aq.y1);
-                        rectDest.Offset(x,y);
-                        rectDest.Y = -rectDest.Y;//HACK temporary method, not sure about how to handle y correctly
+                        rectDest.Offset(x,y + pixelHeight);//ATTENTION! The offset of lineHeight(pixelHeight here) should be appended.
+#if DebugOutput
                         Debug.WriteLine("rectSrc {0}", rectSrc);
                         Debug.WriteLine("rectDest {0}", rectDest);
+#endif
                         g.DrawImage(bitmapPackedCharacters, rectDest, rectSrc, GraphicsUnit.Pixel);
                     }
                     g.Flush();
