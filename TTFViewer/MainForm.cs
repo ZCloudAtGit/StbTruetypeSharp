@@ -86,7 +86,7 @@ namespace TTFViewer
                     {
                         var text = TextTextBox.Text;
                         if (text.Length == 0) return;
-                        bitmap = CreateGlyphForText(text, ref width, ref height);
+                        bitmap = CreateGlyphForText(text, 512, 512);
                     }
                     break;
             }
@@ -208,75 +208,87 @@ namespace TTFViewer
                 //Initialize fontinfo
                 FontInfo font = new FontInfo();
                 STBTrueType.InitFont(ref font, ttf_buffer, STBTrueType.GetFontOffsetForIndex(ttf_buffer, 0));
-                
-                //TODO build packed characters' bitmap for ASCII/Chinese/Japanse/Korean characters etc.
-                
-                PackContext pc = new PackContext();
-                width = 512;
-                height = 512;
-                bitmapData = new byte[width * height];
-                STBTrueType.PackBegin(ref pc, bitmapData, width, height, 0, 1, IntPtr.Zero);
-
-                //Ref: https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/test_truetype.c
-                //allocate packed char buffer
-                PackedChar[] pdata = new PackedChar[text.Length];
-
-                using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
-                {
-                    //get pointer of the pdata
-                    var ptr_pdata = pin_pdata.Pointer;
-                    PackRange[] vPackRange = new PackRange[text.Length];
-                    for (var i = 0; i < text.Length; ++i)
-                    {
-                        //create a PackRange of one character
-                        PackRange pr = new PackRange();
-                        pr.chardata_for_range = IntPtr.Add(ptr_pdata, i * Marshal.SizeOf(typeof(PackedChar)));
-                        pr.first_unicode_char_in_range = text[i] & 0xFFFF;
-                        pr.num_chars_in_range = 1;
-                        pr.font_size = pixelHeight;
-                        //add it to the range list
-                        vPackRange[i] = pr;
-                    }
-                    STBTrueType.PackSetOversampling(ref pc, 2, 2);
-                    STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
-                    STBTrueType.PackEnd(ref pc);
-                    var bitmapPackedCharacters = CreateBitmapFromRawData(bitmapData, width, height);
-
-                    //ref
-                    //https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/oversample/main.c
-
-                    //Draw characters to a bitmap by order
-                    Graphics g = Graphics.FromImage(bmp);
-                    g.Clear(Color.White);
-                    float x = 0, y = 0;
-                    for (var i=0; i<text.Length; ++i)
-                    {
-                        var character = text[i];
-                        AlignedQuad aq;
-                        //get character bitmaps in packed bitmap
-                        STBTrueType.GetPackedQuad(pdata, width, height, i, ref x, ref y, out aq, 0);
-#if DebugOutput
-                        Debug.WriteLine(i);
-                        Debug.WriteLine("x: {0}, y: {1}", x, y);
-                        Debug.WriteLine("src: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
-                        Debug.WriteLine("dest: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.x0, aq.y0, aq.x1, aq.y1);
-#endif
-                        var rectSrc = RectangleF.FromLTRB(aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
-                        var rectDest = RectangleF.FromLTRB(aq.x0, aq.y0, aq.x1, aq.y1);
-                        rectDest.Offset(x,y + pixelHeight);//ATTENTION! The offset of lineHeight(pixelHeight here) should be appended.
-#if DebugOutput
-                        Debug.WriteLine("rectSrc {0}", rectSrc);
-                        Debug.WriteLine("rectDest {0}", rectDest);
-#endif
-                        g.DrawImage(bitmapPackedCharacters, rectDest, rectSrc, GraphicsUnit.Pixel);
-                    }
-                    g.Flush();
-                }
             }
+
+            //TODO build packed characters' bitmap for ASCII/Chinese/Japanse/Korean characters etc.
+                
+            PackContext pc = new PackContext();
+            width = 512;
+            height = 512;
+            bitmapData = new byte[width * height];
+            STBTrueType.PackBegin(ref pc, bitmapData, width, height, 0, 1, IntPtr.Zero);
+
+            //Ref: https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/test_truetype.c
+            //allocate packed char buffer
+            PackedChar[] pdata = new PackedChar[text.Length];
+
+            using (var pin_pdata = new PinnedArray<PackedChar>(pdata))
+            {
+                //get pointer of the pdata
+                var ptr_pdata = pin_pdata.Pointer;
+                PackRange[] vPackRange = new PackRange[text.Length];
+                for (var i = 0; i < text.Length; ++i)
+                {
+                    //create a PackRange of one character
+                    PackRange pr = new PackRange();
+                    pr.chardata_for_range = IntPtr.Add(ptr_pdata, i*Marshal.SizeOf(typeof (PackedChar)));
+                    pr.first_unicode_char_in_range = text[i] & 0xFFFF;
+                    pr.num_chars_in_range = 1;
+                    pr.font_size = pixelHeight;
+                    //add it to the range list
+                    vPackRange[i] = pr;
+                }
+                STBTrueType.PackSetOversampling(ref pc, 2, 2);
+                using (var ttf = new PinnedArray<byte>(ttfFileContent))
+                {
+                    //get pointer of the ttf file content
+                    var ttf_buffer = ttf.Pointer;
+                    STBTrueType.PackFontRanges(ref pc, ttf_buffer, 0, vPackRange, vPackRange.Length);
+                }
+                STBTrueType.PackEnd(ref pc);
+            }
+            var bitmapPackedCharacters = CreateBitmapFromRawData(bitmapData, width, height);
+
+            //ref
+            //https://github.com/nothings/stb/blob/bdef693b7cc89efb0c450b96a8ae4aecf27785c8/tests/oversample/main.c
+
+            //Draw characters to a bitmap by order
+            Graphics g = Graphics.FromImage(bmp);
+            g.Clear(Color.White);
+            float x = 0, y = 0;
+            for (var i=0; i<text.Length; ++i)
+            {
+                var character = text[i];
+                AlignedQuad aq;
+                //get character bitmaps in packed bitmap
+                STBTrueType.GetPackedQuad(pdata, width, height, i, ref x, ref y, out aq, 0);
+#if DebugOutput
+                Debug.WriteLine(i);
+                Debug.WriteLine("x: {0}, y: {1}", x, y);
+                Debug.WriteLine("src: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
+                Debug.WriteLine("dest: left-top: ({0}, {1}), right-bottom: ({2}, {3})", aq.x0, aq.y0, aq.x1, aq.y1);
+#endif
+                var rectSrc = RectangleF.FromLTRB(aq.s0 * width, aq.t0 * height, aq.s1 * width, aq.t1 * height);
+                var rectDest = RectangleF.FromLTRB(aq.x0, aq.y0, aq.x1, aq.y1);
+                rectDest.Offset(x,y + pixelHeight);//ATTENTION! The offset of lineHeight(pixelHeight here) should be appended.
+#if DebugOutput
+                Debug.WriteLine("rectSrc {0}", rectSrc);
+                Debug.WriteLine("rectDest {0}", rectDest);
+#endif
+                g.DrawImage(bitmapPackedCharacters, rectDest, rectSrc, GraphicsUnit.Pixel);
+            }
+            g.Flush();
             return bmp;
         }
 
-        private Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)
+        private Bitmap CreateGlyphForText(string text, int width, int height)
+        {
+            var asciiTTF = TTF.Common["ASCII"];
+
+            return asciiTTF.CreateGlyphForText(text, pixelHeight, 512, 512);
+        }
+
+        private static Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)
         {
             var b = new Bitmap(width, height, PixelFormat.Format24bppRgb);
             var stride = (width % 4 == 0) ? width : (width + (4 - width % 4));
