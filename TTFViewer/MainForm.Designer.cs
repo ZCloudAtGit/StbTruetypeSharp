@@ -45,8 +45,11 @@
             this.tabPage3 = new System.Windows.Forms.TabPage();
             this.CharactersToPackTextBox = new System.Windows.Forms.TextBox();
             this.tabPage4 = new System.Windows.Forms.TabPage();
+            this.label6 = new System.Windows.Forms.Label();
+            this.CharacterTypeComboBox = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.TextTextBox = new System.Windows.Forms.TextBox();
+            this.ShowFontMapButton = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
             label3 = new System.Windows.Forms.Label();
             label5 = new System.Windows.Forms.Label();
@@ -89,7 +92,7 @@
             // 
             // codepointTextBox
             // 
-            this.codepointTextBox.Location = new System.Drawing.Point(6, 18);
+            this.codepointTextBox.Location = new System.Drawing.Point(8, 18);
             this.codepointTextBox.Name = "codepointTextBox";
             this.codepointTextBox.Size = new System.Drawing.Size(93, 21);
             this.codepointTextBox.TabIndex = 0;
@@ -155,6 +158,7 @@
             this.BuildTypeTabControl.SelectedIndex = 0;
             this.BuildTypeTabControl.Size = new System.Drawing.Size(248, 110);
             this.BuildTypeTabControl.TabIndex = 5;
+            this.BuildTypeTabControl.SelectedIndexChanged += new System.EventHandler(this.BuildTypeTabControl_SelectedIndexChanged);
             // 
             // tabPage1
             // 
@@ -231,6 +235,9 @@
             // 
             // tabPage4
             // 
+            this.tabPage4.Controls.Add(this.ShowFontMapButton);
+            this.tabPage4.Controls.Add(this.label6);
+            this.tabPage4.Controls.Add(this.CharacterTypeComboBox);
             this.tabPage4.Controls.Add(this.label4);
             this.tabPage4.Controls.Add(this.TextTextBox);
             this.tabPage4.Location = new System.Drawing.Point(4, 22);
@@ -241,10 +248,28 @@
             this.tabPage4.Text = "Text";
             this.tabPage4.UseVisualStyleBackColor = true;
             // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 4);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(113, 12);
+            this.label6.TabIndex = 7;
+            this.label6.Text = "Type of characters";
+            // 
+            // CharacterTypeComboBox
+            // 
+            this.CharacterTypeComboBox.FormattingEnabled = true;
+            this.CharacterTypeComboBox.Location = new System.Drawing.Point(6, 19);
+            this.CharacterTypeComboBox.Name = "CharacterTypeComboBox";
+            this.CharacterTypeComboBox.Size = new System.Drawing.Size(121, 20);
+            this.CharacterTypeComboBox.TabIndex = 6;
+            this.CharacterTypeComboBox.SelectedIndexChanged += new System.EventHandler(this.CharacterTypeComboBox_SelectedIndexChanged);
+            // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(3, 3);
+            this.label4.Location = new System.Drawing.Point(6, 42);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(53, 12);
             this.label4.TabIndex = 3;
@@ -252,10 +277,20 @@
             // 
             // TextTextBox
             // 
-            this.TextTextBox.Location = new System.Drawing.Point(3, 18);
+            this.TextTextBox.Location = new System.Drawing.Point(6, 57);
             this.TextTextBox.Name = "TextTextBox";
             this.TextTextBox.Size = new System.Drawing.Size(93, 21);
             this.TextTextBox.TabIndex = 2;
+            // 
+            // ShowFontMapButton
+            // 
+            this.ShowFontMapButton.Location = new System.Drawing.Point(133, 17);
+            this.ShowFontMapButton.Name = "ShowFontMapButton";
+            this.ShowFontMapButton.Size = new System.Drawing.Size(101, 23);
+            this.ShowFontMapButton.TabIndex = 8;
+            this.ShowFontMapButton.Text = "Show font map";
+            this.ShowFontMapButton.UseVisualStyleBackColor = true;
+            this.ShowFontMapButton.Click += new System.EventHandler(this.ShowFontMapButton_Click);
             // 
             // MainForm
             // 
@@ -304,6 +339,9 @@
         private System.Windows.Forms.TabPage tabPage4;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox TextTextBox;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.ComboBox CharacterTypeComboBox;
+        private System.Windows.Forms.Button ShowFontMapButton;
     }
 }
 

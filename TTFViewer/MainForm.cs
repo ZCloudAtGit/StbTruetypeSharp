@@ -9,6 +9,7 @@ using System.Drawing.Imaging;
 using System.Runtime.InteropServices;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 
 namespace TTFViewer
 {
@@ -19,6 +20,11 @@ namespace TTFViewer
         string ttfSampleDir;
 
         int BuildType = 1;
+
+        /// <summary>
+        /// Used only for 'text', identify the using TTF
+        /// </summary>
+        private TTF CurrentTTF;
 
         public MainForm()
         {
@@ -38,6 +44,10 @@ namespace TTFViewer
             FontSelectorComboBox.Items.AddRange(vSampleTTFFilePath);
             FontSelectorComboBox.SelectedIndex = 0;
             FontSelectorComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+
+            CharacterTypeComboBox.Items.AddRange(TTF.Common.Keys.ToArray());
+            CharacterTypeComboBox.SelectedIndex = 0;
+            CharacterTypeComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         /// <summary>
@@ -54,40 +64,40 @@ namespace TTFViewer
 
             //Create bitmap form the raw data
             Bitmap bitmap = null;
-            switch(BuildType)
+            switch (BuildType)
             {
                 default:
                 case 0:
-                    {
-                        var text = codepointTextBox.Text;
-                        if (text.Length == 0) return;
-                        var codepoint = text[0];
-                        bitmapData = CreateGlyph(codepoint, ref width, ref height);
-                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
-                    }
+                {
+                    var text = codepointTextBox.Text;
+                    if (text.Length == 0) return;
+                    var codepoint = text[0];
+                    bitmapData = CreateGlyph(codepoint, ref width, ref height);
+                    bitmap = CreateBitmapFromRawData(bitmapData, width, height);
+                }
                     break;
                 case 1:
-                    {
-                        var firstChar = FirstCodepointTextBox.Text[0];
-                        var charCount = (int)CodepointCountNumericUpDown.Value;
-                        bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
-                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
-                    }
+                {
+                    var firstChar = FirstCodepointTextBox.Text[0];
+                    var charCount = (int) CodepointCountNumericUpDown.Value;
+                    bitmapData = CreateGlyph(firstChar, charCount, ref width, ref height);
+                    bitmap = CreateBitmapFromRawData(bitmapData, width, height);
+                }
                     break;
                 case 2:
-                    {
-                        var text = CharactersToPackTextBox.Text;
-                        if (text.Length == 0) return;
-                        bitmapData = CreateGlyph(text, ref width, ref height);
-                        bitmap = CreateBitmapFromRawData(bitmapData, width, height);
-                    }
+                {
+                    var text = CharactersToPackTextBox.Text;
+                    if (text.Length == 0) return;
+                    bitmapData = CreateGlyph(text, ref width, ref height);
+                    bitmap = CreateBitmapFromRawData(bitmapData, width, height);
+                }
                     break;
                 case 3:
-                    {
-                        var text = TextTextBox.Text;
-                        if (text.Length == 0) return;
-                        bitmap = CreateGlyphForText(text, 512, 512);
-                    }
+                {
+                    var text = TextTextBox.Text;
+                    if (text.Length == 0) return;
+                    bitmap = CreateGlyphForText(text, 512, 512);
+                }
                     break;
             }
             
@@ -283,9 +293,12 @@ namespace TTFViewer
 
         private Bitmap CreateGlyphForText(string text, int width, int height)
         {
-            var asciiTTF = TTF.Common["ASCII"];
-
-            return asciiTTF.CreateGlyphForText(text, pixelHeight, 512, 512);
+            if(CurrentTTF!=null)
+                return CurrentTTF.CreateGlyphForText(text, pixelHeight, 512, 512);
+            else
+            {
+                throw new Exception("current TTF not specified!");
+            }
         }
 
         private static Bitmap CreateBitmapFromRawData(Byte[] data, int width, int height)
@@ -319,6 +332,27 @@ namespace TTFViewer
         private void FontHeightNumericUpDown_ValueChanged(object sender, EventArgs e)
         {
             pixelHeight = (float)FontHeightNumericUpDown.Value;
+        }
+
+        private void BuildTypeTabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            FontSelectorComboBox.Enabled = true;
+            FontHeightNumericUpDown.Enabled = true;
+            if (BuildTypeTabControl.SelectedIndex == 3)
+            {
+                FontSelectorComboBox.Enabled = false;
+                FontHeightNumericUpDown.Enabled = false;
+            }
+        }
+
+        private void ShowFontMapButton_Click(object sender, EventArgs e)
+        {
+            bitmapPictureBox.Image = CurrentTTF.PackedCharBitmap;
+        }
+
+        private void CharacterTypeComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            CurrentTTF = TTF.Common[CharacterTypeComboBox.SelectedItem.ToString()];
         }
     }
 }
