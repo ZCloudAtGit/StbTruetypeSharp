@@ -2,7 +2,8 @@
 A C# wrapper of stb_truetype<br/>
 Written with VS2013.
 
-#Solution Structure
+# Solution Structure
+
 Folder                  | Content
 ---                     | ---
 __stb_truetypeSharp__   | the C# wrapper library of stb_truetype
@@ -11,10 +12,10 @@ __stb_truetype__        | the stb_truetype library
 __FontSamples__         | some ttf files used for testing
 __TTFViewer__           | a sample TTF viewer written with stb_truetypeSharp using WinForm
 
-#TODO
+# TODO
 Write a demo that render font images with Mono.Cario.
 
-#LICENSE
+# LICENSE
    __GPLv3__  
    StbTruetypeSharp, a C# wrapper of stb_truetype  
    Copyright (C) 2015  Zou Wei(zwcloud@yeah.net)
