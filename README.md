@@ -13,7 +13,7 @@ __FontSamples__         | some ttf files used for testing
 __TTFViewer__           | a sample TTF viewer written with stb_truetypeSharp using WinForm
 
 # TODO
-Write a demo that render font images with Mono.Cario.
+Write a demo that render font images with [CarioSharp](https://github.com/zwcloud/CarioSharp).
 
 # LICENSE
    __GPLv3__  
